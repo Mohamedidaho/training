@@ -1,0 +1,33 @@
+<odoo>
+
+    <record model="ir.module.category" id="module_category_real_estate_brokerage">
+        <field name="name">Real Estate Brokerage</field>
+        <field name="description">Category for Real Estate</field>
+        <field name="sequence">45</field>
+    </record>
+
+     <record id="estate_group_user" model="res.groups">
+        <field name="name">Agent</field>
+        <field name="category_id" ref="module_category_real_estate_brokerage"/>
+    </record>
+
+    <record id="estate_group_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_real_estate_brokerage"/>
+        <field name="implied_ids" eval="[(4, ref('estate.estate_group_user'))]"/>
+    </record>
+
+    <record id="real_estate_rule" model="ir.rule">
+        <field name="name"> Access to the record which the user is the saleperson or there is no saleperson </field>
+        <field name="model_id" ref="model_estate_property"/> 
+        <field name="perm_read" eval="True" />
+        <field name="groups" eval="[Command.link(ref('estate.estate_group_user'))]"/>
+        <field name="domain_force">
+            [
+                '|',('user_id','=', user.id),
+                    ('user_id','=',False)               
+            ]
+        </field>
+    </record>
+    
+</odoo>
